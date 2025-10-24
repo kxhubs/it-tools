@@ -4,9 +4,29 @@
     <img src="./.github/logo-dark.png" alt="logo">
 </picture>
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/CorentinTh/it-tools)
+<a href="https://codespaces.new/CorentinTh/it-tools">
+  <img alt="Open in GitHub Codespaces" width="400" src="https://github.com/codespaces/badge.svg">
+</a>
+<p align="center">
+Useful tools for developer and people working in IT. <a href="https://it-tools.tech">Try it!</a>
+</p>
 
-Useful tools for developer and people working in IT. [Have a look !](https://it-tools.tech).
+
+## Sponsors
+
+<div align="center" markdown="1">
+<p align="center">
+  IT-Tools is proudly sponsored by:
+</p>
+
+<a href="https://go.warp.dev/it-tools">
+  <img alt="Warp sponsorship" width="400" src="https://raw.githubusercontent.com/warpdotdev/brand-assets/refs/heads/main/Github/Sponsor/Warp-Github-LG-01.png">
+</a>
+
+### [Warp, built for coding with multiple AI agents.](https://go.warp.dev/it-tools)
+[Available for MacOS, Linux, & Windows](https://go.warp.dev/it-tools)<br>
+
+</div>
 
 ## Functionalities and roadmap
 
