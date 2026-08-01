@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { compare, hash } from 'bcryptjs';
 import { useThemeVars } from 'naive-ui';
-import { type BcryptFn, InvalidatedError, bcryptWithProgressUpdates } from './bcrypt.models';
+import { type BcryptRequest, InvalidatedError, bcryptWithProgressUpdates } from './bcrypt.models';
 import { useCopy } from '@/composable/copy';
 
 const themeVars = useThemeVars();
@@ -15,18 +14,12 @@ interface ExecutionState<T> {
 
 const blankState = () => ({ result: null, percentage: 0, error: null, timeTakenMs: null });
 
-async function exec<Param, Result>(
-  fn: BcryptFn<Param, Result>,
-  args: [string | null, Param | null],
+async function exec<Result>(
+  request: BcryptRequest,
   controller: AbortController,
   state: ExecutionState<Result>,
 ) {
-  const [arg0, arg1] = args;
-  if (arg0 == null || arg1 == null) {
-    return;
-  }
-
-  for await (const update of bcryptWithProgressUpdates(fn, [arg0, arg1], { controller, timeoutMs: 10_000 })) {
+  for await (const update of bcryptWithProgressUpdates<Result>(request, { controller, timeoutMs: 10_000 })) {
     switch (update.kind) {
       case 'progress': {
         state.percentage = Math.round(update.progress * 100);
@@ -41,12 +34,15 @@ async function exec<Param, Result>(
         state.error = update.message;
         break;
       }
+      case 'cancelled': {
+        break;
+      }
     }
   }
 }
 
 function initWatcher<Param, Result>(
-  fn: BcryptFn<Param, Result>,
+  operation: BcryptRequest['operation'],
   inputs: [Ref<string | null>, Ref<Param | null>],
   state: Ref<ExecutionState<Result>>,
 ) {
@@ -55,14 +51,18 @@ function initWatcher<Param, Result>(
     controller.abort(new InvalidatedError());
     controller = new AbortController();
     state.value = blankState();
-    exec(fn, inputs, controller, state.value);
+    const [arg0, arg1] = inputs;
+    if (arg0 != null && arg1 != null) {
+      exec<Result>({ operation, args: [arg0, arg1] } as BcryptRequest, controller, state.value);
+    }
   });
+  onUnmounted(() => controller.abort(new InvalidatedError()));
 }
 
 const hashState = ref<ExecutionState<string>>(blankState());
 const input = ref('');
 const saltCount = ref(10);
-initWatcher(hash, [input, saltCount], hashState);
+initWatcher('hash', [input, saltCount], hashState);
 
 const source = computed(() => hashState.value.result ?? '');
 const { copy } = useCopy({ source, text: 'Hashed string copied to the clipboard' });
@@ -70,7 +70,7 @@ const { copy } = useCopy({ source, text: 'Hashed string copied to the clipboard'
 const compareState = ref<ExecutionState<boolean>>(blankState());
 const compareString = ref('');
 const compareHash = ref('');
-initWatcher(compare, [compareString, compareHash], compareState);
+initWatcher('compare', [compareString, compareHash], compareState);
 </script>
 
 <template>

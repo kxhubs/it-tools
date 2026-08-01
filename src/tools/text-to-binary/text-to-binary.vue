@@ -23,12 +23,11 @@ const { copy: copyText } = useCopy({ source: textFromBinary });
   <c-card title="Text to UTF-8 binary">
     <c-input-text
       v-model:value="inputText"
-      multiline
+
       placeholder="e.g. 'Hello world'"
       label="Enter text to convert to binary"
-      autosize
-      autofocus
-      raw-text
+
+      autosize autofocus raw-text multiline
       test-id="text-to-binary-input"
     />
     <c-input-text
@@ -42,7 +41,9 @@ const { copy: copyText } = useCopy({ source: textFromBinary });
       test-id="text-to-binary-output"
     />
     <div mt-2 flex justify-center>
-      <c-button :disabled="!binaryFromText" @click="copyBinary()"> Copy binary to clipboard </c-button>
+      <c-button :disabled="!binaryFromText" @click="copyBinary()">
+        Copy binary to clipboard
+      </c-button>
     </div>
   </c-card>
 
@@ -68,7 +69,9 @@ const { copy: copyText } = useCopy({ source: textFromBinary });
       test-id="binary-to-text-output"
     />
     <div mt-2 flex justify-center>
-      <c-button :disabled="!textFromBinary" @click="copyText()"> Copy text to clipboard </c-button>
+      <c-button :disabled="!textFromBinary" @click="copyText()">
+        Copy text to clipboard
+      </c-button>
     </div>
   </c-card>
 </template>

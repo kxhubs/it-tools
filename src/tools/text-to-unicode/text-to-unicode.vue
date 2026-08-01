@@ -57,7 +57,9 @@ const { copy: copyText } = useCopy({ source: textFromUnicode });
         </n-form-item>
       </div>
       <div mt-2 flex justify-center>
-        <c-button :disabled="!unicodeFromText" @click="copyUnicode()"> Copy unicode to clipboard </c-button>
+        <c-button :disabled="!unicodeFromText" @click="copyUnicode()">
+          Copy unicode to clipboard
+        </c-button>
       </div>
     </c-card>
     <c-card class="card" title="Unicode to Text">
@@ -81,7 +83,9 @@ const { copy: copyText } = useCopy({ source: textFromUnicode });
         test-id="unicode-to-text-output"
       />
       <div mt-2 flex justify-center>
-        <c-button :disabled="!textFromUnicode" @click="copyText()"> Copy text to clipboard </c-button>
+        <c-button :disabled="!textFromUnicode" @click="copyText()">
+          Copy text to clipboard
+        </c-button>
       </div>
     </c-card>
   </div>

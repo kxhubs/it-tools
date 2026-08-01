@@ -1,7 +1,11 @@
-import { describe, expect, it } from 'vitest';
-import { getCronType, getLastExecutionTimes, isCronValid } from './crontab-generator.service';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { getCronDescription, getCronType, getNextExecutionTimes, isCronValid } from './crontab-generator.service';
 
 describe('crontab-generator', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   describe('isCronValid', () => {
     it('should return true for all valid formats', () => {
       // standard format
@@ -50,14 +54,29 @@ describe('crontab-generator', () => {
     });
   });
 
-  describe('getLastExecutionTimes', () => {
+  describe('getCronDescription', () => {
+    it('uses AWS day-of-week numbering', () => {
+      expect(getCronDescription('0 0 ? * 1 *', 'aws')).toContain('Sunday');
+    });
+  });
+
+  describe('getNextExecutionTimes', () => {
     it('should return next valid datetimes', () => {
-      expect(getLastExecutionTimes('0 0 * * 1-5')).toHaveLength(5);
-      expect(getLastExecutionTimes('23 0-20/2 * * *')).toHaveLength(5);
+      expect(getNextExecutionTimes('0 0 * * 1-5')).toHaveLength(5);
+      expect(getNextExecutionTimes('23 0-20/2 * * *')).toHaveLength(5);
 
       // AWS formats
-      expect(getLastExecutionTimes('0 11-22 ? * MON-FRI *')).toHaveLength(5);
-      expect(getLastExecutionTimes('0 0 ? * 1 *')).toHaveLength(5);
+      expect(getNextExecutionTimes('0 11-22 ? * MON-FRI *')).toHaveLength(5);
+      expect(getNextExecutionTimes('0 0 ? * 1 *')).toHaveLength(5);
+    });
+
+    it('evaluates AWS schedules in UTC after the current time', () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date('2026-08-02T00:30:00.000Z'));
+
+      expect(getNextExecutionTimes('0 1 ? * * *', 'Asia/Shanghai', 1)).toEqual([
+        '2026-08-02T01:00:00.000Z',
+      ]);
     });
   });
 });

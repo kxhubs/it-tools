@@ -228,8 +228,9 @@ describe('date-time-converter models', () => {
       expect(isJSDate('new Date(2000, 0, 1, 12, 12)')).toBe(true);
       expect(isJSDate('new Date(2000, 0, 1, 12, 12, 12)')).toBe(true);
       expect(isJSDate('new Date(2000, 0, 1, 12, 12, 12, 1)')).toBe(true);
+      expect(isJSDate('new Date(2026, 10, 1, 0, 0, 0, 0)')).toBe(true);
+      expect(isJSDate('new Date(2000)')).toBe(true);
 
-      expect(isJSDate('new Date(2000)')).toBe(false);
       expect(isJSDate('')).toBe(false);
       expect(isJSDate('foo')).toBe(false);
       expect(isJSDate('1.1.1')).toBe(false);
@@ -242,6 +243,12 @@ describe('date-time-converter models', () => {
       expect(fromJSDate('new Date(2000, 0, 1, 12, 12)')).toEqual(new Date(2000, 0, 1, 12, 12));
       expect(fromJSDate('new Date(2000, 0, 1, 12, 12, 12)')).toEqual(new Date(2000, 0, 1, 12, 12, 12));
       expect(fromJSDate('new Date(2000, 0, 1, 12, 12, 12, 1)')).toEqual(new Date(2000, 0, 1, 12, 12, 12, 1));
+      expect(fromJSDate('new Date(50, 10, 1, 0, 0, 0, 0)')).toEqual(new Date(50, 10, 1, 0, 0, 0, 0));
+      expect(fromJSDate('new Date(2000)')).toEqual(new Date(2000));
+    });
+
+    test('rejects invalid JS Date constructors instead of returning the current time', () => {
+      expect(() => fromJSDate('not a date')).toThrow('Invalid JS Date constructor');
     });
   });
 
@@ -251,6 +258,19 @@ describe('date-time-converter models', () => {
       expect(toJSDate(new Date(2000, 0, 1, 12, 12))).toEqual('new Date(2000, 0, 1, 12, 12, 0, 0);');
       expect(toJSDate(new Date(2000, 0, 1, 12, 12, 12))).toEqual('new Date(2000, 0, 1, 12, 12, 12, 0);');
       expect(toJSDate(new Date(2000, 0, 1, 12, 12, 12, 1))).toEqual('new Date(2000, 0, 1, 12, 12, 12, 1);');
+    });
+
+    test('round-trips years from 0 to 99 and negative years', () => {
+      const yearFifty = new Date(0);
+      yearFifty.setFullYear(50, 10, 1);
+      yearFifty.setHours(0, 0, 0, 0);
+      const negativeYear = new Date(0);
+      negativeYear.setFullYear(-44, 2, 15);
+      negativeYear.setHours(12, 30, 0, 0);
+
+      expect(toJSDate(yearFifty)).toBe(`new Date(${yearFifty.getTime()});`);
+      expect(fromJSDate(toJSDate(yearFifty))).toEqual(yearFifty);
+      expect(fromJSDate(toJSDate(negativeYear))).toEqual(negativeYear);
     });
   });
 });
