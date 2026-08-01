@@ -209,6 +209,21 @@ importers:
       yaml:
         specifier: ^2.2.1
         version: 2.2.1
+      '@date-fns/utc':
+        specifier: ^1.2.0
+        version: 1.2.0
+      countries-and-timezones:
+        specifier: ^3.6.0
+        version: 3.9.0
+      cron-parser:
+        specifier: ^4.9.0
+        version: 4.9.0
+      event-cron-parser:
+        specifier: ^1.0.34
+        version: 1.0.37
+      get-timezone-offset:
+        specifier: ^1.0.5
+        version: 1.0.5
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^0.41.0
@@ -5942,6 +5957,24 @@ packages:
     engines: {node: '>= 16.0.0'}
     hasBin: true
 
+  '@date-fns/utc@1.2.0':
+    resolution: {integrity: sha512-YLq+crMPJiBmIdkRmv9nZuZy1mVtMlDcUKlg4mvI0UsC/dZeIaGoGB5p/C4FrpeOhZ7zBTK03T58S0DFkRNMnw==}
+  countries-and-timezones@3.9.0:
+    resolution: {integrity: sha512-3upkVtUfZgdp5xOQI/Deg1ye73ae6bygJMO4UvtUi6wLjwcj7cBqx2PzSZ1VL8i5iveBbjhsQp2Judx7kPKivA==}
+    engines: {node: '>=8.x', npm: '>=5.x'}
+  cron-parser@4.9.0:
+    resolution: {integrity: sha512-p0SaNjrHOnQeR8/VnfGbmg9te2kfyYSQ7Sc/j/6DtPL3JQvKxmjO9TSjNFpujqV3vEYYBvNNvXSxzyksBWAx1Q==}
+    engines: {node: '>=12.0.0'}
+  event-cron-parser@1.0.37:
+    resolution: {integrity: sha512-2M0tfDRa/zs12lFJeof7mx+VsujG2BBEXeYnVnWG+xcAx1kQutfZeFJiHvTYfeFRDBJLX8XOnUdto1OAmB1mlg==}
+  get-timezone-offset@1.0.5:
+    resolution: {integrity: sha512-+B+/vEJ9qJgZheDVNmuY+4il8sJhTFXRvSiiqyRfwiCEhTaZqn/yCoNToDzQL+Mv9DLKlyO1bSIP5nUCJQN9Aw==}
+    engines: {node: '>=4.0.0'}
+  luxon@3.7.2:
+    resolution: {integrity: sha512-vtEhXh/gNjI9Yg1u4jX/0YVPMvxzHuGgCm6tC5kZyb08yjGWGnqAjGJvcXbqQR2P3MyMEFnRbpcdFS6PBcLqew==}
+    engines: {node: '>=12'}
+  number-to-words@1.2.4:
+    resolution: {integrity: sha512-/fYevVkXRcyBiZDg6yzZbm0RuaD6i0qRfn8yr+6D0KgBMOndFPxuW10qCHpzs50nN8qKuv78k8MuotZhcVX6Pw==}
 snapshots:
 
   '@aashutoshrathi/word-wrap@1.2.6': {}
@@ -12505,3 +12538,20 @@ snapshots:
       webpod: 0.0.2
       which: 3.0.0
       yaml: 2.2.1
+  '@date-fns/utc@1.2.0': {}
+
+  countries-and-timezones@3.9.0: {}
+
+  cron-parser@4.9.0:
+    dependencies:
+      luxon: 3.7.2
+
+  event-cron-parser@1.0.37:
+    dependencies:
+      number-to-words: 1.2.4
+
+  get-timezone-offset@1.0.5: {}
+
+  luxon@3.7.2: {}
+
+  number-to-words@1.2.4: {}
