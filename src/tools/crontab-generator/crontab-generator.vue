@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import cronstrue from 'cronstrue';
 import ctz from 'countries-and-timezones';
 import getTimezoneOffset from 'get-timezone-offset';
-import { type CronType, getLastExecutionTimes, isCronValid } from './crontab-generator.service';
+import { type CronType, getCronDescription, getNextExecutionTimes, isCronValid } from './crontab-generator.service';
 import { useStyleStore } from '@/stores/style.store';
 import { useQueryParamOrStorage } from '@/composable/queryParams';
 
 const styleStore = useStyleStore();
 
 const cron = ref('40 * * * *');
+const cronType = ref<CronType>('standard');
 const cronstrueConfig = reactive({
   verbose: true,
   dayOfWeekStartIndexZero: true,
@@ -29,7 +29,9 @@ const allTimezones = Object.values(ctz.getAllTimezones()).map((tz) => {
 });
 const currentTimezone = useQueryParamOrStorage({ name: 'tz', storageName: 'crongen:tz', defaultValue: browserTimezone });
 watchEffect(() => {
-  cronstrueConfig.tzOffset = -getTimezoneOffset(currentTimezone.value, new Date()) / 60;
+  cronstrueConfig.tzOffset = cronType.value === 'aws'
+    ? 0
+    : -getTimezoneOffset(currentTimezone.value, new Date()) / 60;
 });
 
 const commonHelpers = [
@@ -141,7 +143,6 @@ const awsHelpers = [
 
 const defaultAWSCronExpression = '0 0 ? * 1 *';
 const defaultStandardCronExpression = '40 * * * *';
-const cronType = ref<CronType>('standard');
 watch(cronType,
   (newCronType) => {
     if (newCronType === 'aws') {
@@ -165,10 +166,7 @@ const getHelpers = computed(() => {
 });
 
 const cronString = computed(() => {
-  if (isCronValid(cron.value)) {
-    return cronstrue.toString(cron.value, cronstrueConfig);
-  }
-  return ' ';
+  return getCronDescription(cron.value, cronType.value, cronstrueConfig) || ' ';
 });
 
 const cronValidationRules = [
@@ -179,10 +177,10 @@ const cronValidationRules = [
 ];
 
 const executionTimesString = computed(() => {
-  if (isCronValid(cron.value)) {
+  if (isCronValid(cron.value, cronType.value)) {
     try {
-      const lastExecutionTimes = getLastExecutionTimes(cron.value, currentTimezone.value);
-      const executionTimesString = lastExecutionTimes.join('\n');
+      const nextExecutionTimes = getNextExecutionTimes(cron.value, currentTimezone.value);
+      const executionTimesString = nextExecutionTimes.join('\n');
       return `Next 5 execution times:\n${executionTimesString}`;
     }
     catch (e: any) {
@@ -247,7 +245,11 @@ const executionTimesString = computed(() => {
           searchable
           label="Timezone:"
           :options="allTimezones"
+          :disabled="cronType === 'aws'"
         />
+        <div v-if="cronType === 'aws'" op-60>
+          AWS cron schedules are evaluated in UTC.
+        </div>
       </n-form>
     </div>
   </c-card>

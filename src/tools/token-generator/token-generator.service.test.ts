@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createToken } from './token-generator.service';
+import { MAX_TOKEN_COUNT, createToken, createTokens } from './token-generator.service';
 
 describe('token-generator', () => {
   describe('createToken', () => {
@@ -107,6 +107,18 @@ describe('token-generator', () => {
 
       expect(token).toHaveLength(256);
       expect(token).toMatch(/^[03456789]+$/);
+    });
+  });
+
+  describe('createTokens', () => {
+    it('falls back to one token when count is not finite', () => {
+      expect(createTokens({ count: Number.POSITIVE_INFINITY, length: 4, alphabet: 'a' })).toBe('aaaa');
+    });
+
+    it('limits the number of generated tokens', () => {
+      const tokens = createTokens({ count: MAX_TOKEN_COUNT + 1, length: 1, alphabet: 'a' });
+
+      expect(tokens.split('\n')).toHaveLength(MAX_TOKEN_COUNT);
     });
   });
 });

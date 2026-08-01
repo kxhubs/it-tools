@@ -23,7 +23,7 @@
         }
     },
     "postCreateCommand": "sudo cp .devcontainer/welcome.txt /usr/local/etc/vscode-dev-containers/first-run-notice.txt",
-    "postStartCommand": "npm install -g pnpm && pnpm install",
+    "postStartCommand": "npm install -g pnpm@9.11.0 && pnpm install --frozen-lockfile",
     "forwardPorts": [5173],
     "portsAttributes": {
         "5173": {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { createToken } from './token-generator.service';
+import { MAX_TOKEN_COUNT, createTokens } from './token-generator.service';
 import { useCopy } from '@/composable/copy';
 import { useQueryParamOrStorage } from '@/composable/queryParams';
 import { computedRefreshable } from '@/composable/computedRefreshable';
@@ -14,15 +14,15 @@ const deniedChars = useQueryParamOrStorage({ name: 'deny', storageName: 'token-g
 const { t } = useI18n();
 
 const [tokens, refreshTokens] = computedRefreshable(() =>
-  Array.from({ length: count.value < 1 ? 1 : count.value },
-    () => createToken({
-      length: length.value,
-      withUppercase: withUppercase.value,
-      withLowercase: withLowercase.value,
-      withNumbers: withNumbers.value,
-      withSymbols: withSymbols.value,
-      deniedChars: deniedChars.value,
-    })).join('\n'),
+  createTokens({
+    count: count.value,
+    length: length.value,
+    withUppercase: withUppercase.value,
+    withLowercase: withLowercase.value,
+    withNumbers: withNumbers.value,
+    withSymbols: withSymbols.value,
+    deniedChars: deniedChars.value,
+  }),
 );
 
 const { copy } = useCopy({ source: tokens, text: t('tools.token-generator.copied') });
@@ -63,8 +63,8 @@ const { copy } = useCopy({ source: tokens, text: t('tools.token-generator.copied
       </n-form-item>
 
       <n-form-item label="Number of token to generate" label-placement="left">
-        <n-slider v-model:value="count" :step="1" :min="1" mr-2 />
-        <n-input-number v-model:value="count" :min="1" size="small" />
+        <n-slider v-model:value="count" :step="1" :min="1" :max="MAX_TOKEN_COUNT" mr-2 />
+        <n-input-number v-model:value="count" :min="1" :max="MAX_TOKEN_COUNT" size="small" />
       </n-form-item>
 
       <c-input-text

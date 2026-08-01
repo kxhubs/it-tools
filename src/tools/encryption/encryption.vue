@@ -147,7 +147,9 @@ function generateRandomIVHex(length = 12) {
 }
 
 // Watchers to handle both sync and async algorithms for encryption
+let encryptionRevision = 0;
 watch([cypherInput, cypherSecret, cypherAlgo, cypherAesMode, cypherIV], async () => {
+  const revision = ++encryptionRevision;
   // If AES is selected, handle modes
   if (cypherAlgo.value === 'AES') {
     const mode = cypherAesMode.value;
@@ -163,6 +165,9 @@ watch([cypherInput, cypherSecret, cypherAlgo, cypherAesMode, cypherIV], async ()
         }
         // Pass IV to webCryptoEncrypt
         const encResult = await webCryptoEncrypt('AES-GCM', cypherInput.value, cypherSecret.value, ivHex);
+        if (revision !== encryptionRevision) {
+          return;
+        }
         if (typeof encResult === 'object' && encResult.result && encResult.iv) {
           cypherOutput.value = encResult.result;
         }
@@ -171,7 +176,9 @@ watch([cypherInput, cypherSecret, cypherAlgo, cypherAesMode, cypherIV], async ()
         }
       }
       catch {
-        cypherOutput.value = 'Encryption error';
+        if (revision === encryptionRevision) {
+          cypherOutput.value = 'Encryption error';
+        }
       }
     }
     else {
@@ -198,7 +205,9 @@ watch([cypherAesMode, cypherAlgo], () => {
 });
 
 // Watchers to handle both sync and async algorithms for decryption
+let decryptionRevision = 0;
 watch([decryptInput, decryptSecret, decryptAlgo, decryptAesMode], async () => {
+  const revision = ++decryptionRevision;
   decryptError.value = '';
   if (decryptAlgo.value === 'AES') {
     const mode = decryptAesMode.value;
@@ -208,15 +217,21 @@ watch([decryptInput, decryptSecret, decryptAlgo, decryptAesMode], async () => {
       try {
         const decryptionResult = algo.decrypt(mode, decryptInput.value, decryptSecret.value);
         if (decryptionResult && typeof decryptionResult._async === 'function') {
-          decryptOutput.value = await decryptionResult._async();
+          const result = await decryptionResult._async();
+          if (revision !== decryptionRevision) {
+            return;
+          }
+          decryptOutput.value = result;
         }
         else {
           throw new Error('Invalid decryption result or unsupported mode.');
         }
       }
       catch (e: any) {
-        decryptOutput.value = '';
-        decryptError.value = e?.message || 'Unable to decrypt your text';
+        if (revision === decryptionRevision) {
+          decryptOutput.value = '';
+          decryptError.value = e?.message || 'Unable to decrypt your text';
+        }
       }
     }
     else {
@@ -251,10 +266,10 @@ watch([decryptInput, decryptSecret, decryptAlgo, decryptAesMode], async () => {
         label="Your text:"
         placeholder="The string to cypher"
         rows="4"
-        multiline raw-text monospace autosize flex-1
+        raw-text autosize multiline monospace flex-1
       />
       <div flex flex-1 flex-col gap-2>
-        <c-input-text v-model:value="cypherSecret" label="Your secret key:" clearable raw-text />
+        <c-input-text v-model:value="cypherSecret" label="Your secret key:" raw-text clearable />
         <c-select
           v-model:value="cypherAlgo"
           label="Encryption algorithm:"
@@ -286,7 +301,7 @@ watch([decryptInput, decryptSecret, decryptAlgo, decryptAesMode], async () => {
       :value="cypherOutput"
       rows="3"
       placeholder="Your string hash"
-      multiline monospace readonly autosize mt-5
+      multiline monospace autosize readonly mt-5
     />
   </c-card>
   <!-- Decryption card UI -->
