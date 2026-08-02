@@ -5,6 +5,7 @@ import { isNotThrowing } from '@/utils/boolean';
 import { withDefaultOnError } from '@/utils/defaults';
 
 const encodeInput = ref('Hello world :)');
+const { t } = useI18n();
 const encodeOutput = computed(() => withDefaultOnError(() => encodeURIComponent(encodeInput.value), ''));
 
 const encodedValidation = useValidation({
@@ -12,12 +13,12 @@ const encodedValidation = useValidation({
   rules: [
     {
       validator: value => isNotThrowing(() => encodeURIComponent(value)),
-      message: 'Impossible to parse this string',
+      message: t('tools.url-encoder.impossibleToParse'),
     },
   ],
 });
 
-const { copy: copyEncoded } = useCopy({ source: encodeOutput, text: 'Encoded string copied to the clipboard' });
+const { copy: copyEncoded } = useCopy({ source: encodeOutput, text: t('tools.url-encoder.encodedCopied') });
 
 const decodeInput = ref('Hello%20world%20%3A)');
 const decodeOutput = computed(() => withDefaultOnError(() => decodeURIComponent(decodeInput.value), ''));
@@ -27,70 +28,70 @@ const decodeValidation = useValidation({
   rules: [
     {
       validator: value => isNotThrowing(() => decodeURIComponent(value)),
-      message: 'Impossible to parse this string',
+      message: t('tools.url-encoder.impossibleToParse'),
     },
   ],
 });
 
-const { copy: copyDecoded } = useCopy({ source: decodeOutput, text: 'Decoded string copied to the clipboard' });
+const { copy: copyDecoded } = useCopy({ source: decodeOutput, text: t('tools.url-encoder.decodedCopied') });
 </script>
 
 <template>
-  <c-card title="Encode">
+  <c-card :title="t('tools.url-encoder.encode')">
     <c-input-text
       v-model:value="encodeInput"
-      label="Your string :"
+      :label="`${t('tools.url-encoder.encodeInputLabel')}: `"
       :validation="encodedValidation"
       multiline
       autosize
-      placeholder="The string to encode"
+      :placeholder="t('tools.url-encoder.encodePlaceholder')"
       rows="2"
       mb-3
     />
 
     <c-input-text
-      label="Your string encoded :"
+      :label="`${t('tools.url-encoder.encodeOutputLabel')}: `"
       :value="encodeOutput"
       multiline
       autosize
       readonly
-      placeholder="Your string encoded"
+      :placeholder="t('tools.url-encoder.encodeOutputPlaceholder')"
       rows="2"
       mb-3
     />
 
     <div flex justify-center>
       <c-button @click="copyEncoded()">
-        Copy
+        {{ t('tools.url-encoder.copy') }}
       </c-button>
     </div>
   </c-card>
-  <c-card title="Decode">
+  <c-card :title="t('tools.url-encoder.decode')">
     <c-input-text
       v-model:value="decodeInput"
-      label="Your encoded string :"
+      :label="`${t('tools.url-encoder.decodeInputLabel')}: `"
       :validation="decodeValidation"
       multiline
       autosize
-      placeholder="The string to decode"
+      :placeholder="t('tools.url-encoder.decodePlaceholder')"
       rows="2"
       mb-3
     />
 
     <c-input-text
-      label="Your string decoded :"
+      :label="`${t('tools.url-encoder.decodeOutputLabel')}: `"
       :value="decodeOutput"
       multiline
       autosize
       readonly
-      placeholder="Your string decoded"
+      :placeholder="t('tools.url-encoder.decodeOutputPlaceholder')"
       rows="2"
       mb-3
     />
 
     <div flex justify-center>
       <c-button @click="copyDecoded()">
-        Copy
+        {{ t('tools.url-encoder.copy') }}
       </c-button>
     </div>
   </c-card>

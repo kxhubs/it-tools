@@ -4,6 +4,7 @@ import { useCopy } from '@/composable/copy';
 
 const converterId = ref<ConverterId>('fullUnicode');
 const skipAscii = ref(true);
+const { t } = useI18n();
 
 const inputText = ref('');
 const unicodeFromText = computed(() =>
@@ -26,16 +27,16 @@ const { copy: copyText } = useCopy({ source: textFromUnicode });
       <c-select
         v-model:value="converterId"
         searchable
-        label="Conversion type:"
+        :label="t('tools.text-to-unicode.conversionType')"
         :options="Object.entries(converters).map(([key, val]) => ({ label: val.config.name, value: key }))"
       />
     </div>
-    <c-card class="card" title="Text to Unicode">
+    <c-card class="card" :title="t('tools.text-to-unicode.textToUnicodeTitle')">
       <c-input-text
         v-model:value="inputText"
         multiline
-        placeholder="e.g. 'Hello Avengers'"
-        label="Enter text to convert to Unicode"
+        :placeholder="t('tools.text-to-unicode.textPlaceholder')"
+        :label="t('tools.text-to-unicode.textInputLabel')"
         autosize
         autofocus
         raw-text
@@ -43,48 +44,48 @@ const { copy: copyText } = useCopy({ source: textFromUnicode });
       />
       <c-input-text
         v-model:value="unicodeFromText"
-        label="Unicode from your text"
+        :label="t('tools.text-to-unicode.unicodeOutputLabel')"
         multiline
         raw-text
         readonly
         mt-2
-        placeholder="The unicode representation of your text will be here"
+        :placeholder="t('tools.text-to-unicode.unicodeOutputPlaceholder')"
         test-id="text-to-unicode-output"
       />
       <div mt-2 flex justify-start>
-        <n-form-item label="Skip ASCII chars with no special meaning?" :show-feedback="false" label-placement="left">
+        <n-form-item :label="t('tools.text-to-unicode.skipAscii')" :show-feedback="false" label-placement="left">
           <n-switch v-model:value="skipAscii" />
         </n-form-item>
       </div>
       <div mt-2 flex justify-center>
         <c-button :disabled="!unicodeFromText" @click="copyUnicode()">
-          Copy unicode to clipboard
+          {{ t('tools.text-to-unicode.copyUnicode') }}
         </c-button>
       </div>
     </c-card>
-    <c-card class="card" title="Unicode to Text">
+    <c-card class="card" :title="t('tools.text-to-unicode.unicodeToTextTitle')">
       <c-input-text
         v-model:value="inputUnicode"
         multiline
-        placeholder="Input Unicode"
-        label="Enter unicode to convert to text"
+        :placeholder="t('tools.text-to-unicode.unicodePlaceholder')"
+        :label="t('tools.text-to-unicode.unicodeInputLabel')"
         autosize
         raw-text
         test-id="unicode-to-text-input"
       />
       <c-input-text
         v-model:value="textFromUnicode"
-        label="Text from your Unicode"
+        :label="t('tools.text-to-unicode.textOutputLabel')"
         multiline
         raw-text
         readonly
         mt-2
-        placeholder="The text representation of your unicode will be here"
+        :placeholder="t('tools.text-to-unicode.textOutputPlaceholder')"
         test-id="unicode-to-text-output"
       />
       <div mt-2 flex justify-center>
         <c-button :disabled="!textFromUnicode" @click="copyText()">
-          Copy text to clipboard
+          {{ t('tools.text-to-unicode.copyText') }}
         </c-button>
       </div>
     </c-card>

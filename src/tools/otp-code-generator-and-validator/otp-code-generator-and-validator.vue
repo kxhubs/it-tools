@@ -12,6 +12,7 @@ const now = useTimestamp();
 const interval = computed(() => (now.value / 1000) % 30);
 const theme = useThemeVars();
 const styleStore = useStyleStore();
+const { t } = useI18n();
 
 const secret = ref(generateSecret());
 
@@ -41,11 +42,11 @@ const { qrcode } = useQRCode({
 
 const secretValidationRules = [
   {
-    message: 'Secret should be a base32 string',
+    message: t('tools.otp-generator.secretShouldBeBase32'),
     validator: (value: string) => value.toUpperCase().match(/^[A-Z234567]+$/),
   },
   {
-    message: 'Please set a secret',
+    message: t('tools.otp-generator.secretEmpty'),
     validator: (value: string) => value !== '',
   },
 ];
@@ -55,13 +56,13 @@ const secretValidationRules = [
   <div style="max-width: 350px">
     <c-input-text
       v-model:value="secret"
-      label="Secret"
-      placeholder="Paste your TOTP secret..."
+      :label="t('tools.otp-generator.secret')"
+      :placeholder="t('tools.otp-generator.secretPlaceholder')"
       mb-5
       :validation-rules="secretValidationRules"
     >
       <template #suffix>
-        <c-tooltip tooltip="Generate a new random secret">
+        <c-tooltip :tooltip="t('tools.otp-generator.generateNewSecret')">
           <c-button circle variant="text" size="small" @click="refreshSecret">
             <icon-mdi-refresh />
           </c-button>
@@ -74,53 +75,53 @@ const secretValidationRules = [
 
       <n-progress :percentage="(100 * interval) / 30" :color="theme.primaryColor" :show-indicator="false" />
       <div style="text-align: center">
-        Next in {{ String(Math.floor(30 - interval)).padStart(2, '0') }}s
+        {{ t('tools.otp-generator.nextIn', { seconds: String(Math.floor(30 - interval)).padStart(2, '0') }) }}
       </div>
     </div>
     <div mt-4 flex flex-col items-center justify-center gap-3>
       <n-image :src="qrcode" />
       <c-button :href="keyUri" target="_blank">
-        Open Key URI in new tab
+        {{ t('tools.otp-generator.openKeyUri') }}
       </c-button>
     </div>
   </div>
   <div style="max-width: 350px">
     <InputCopyable
-      label="Secret in hexadecimal"
+      :label="t('tools.otp-generator.secretInHexadecimal')"
       :value="base32toHex(secret)"
       readonly
-      placeholder="Secret in hex will be displayed here"
+      :placeholder="t('tools.otp-generator.secretInHexPlaceholder')"
       mb-5
     />
 
     <InputCopyable
-      label="Epoch"
+      :label="t('tools.otp-generator.epoch')"
       :value="Math.floor(now / 1000).toString()"
       readonly
       mb-5
-      placeholder="Epoch in sec will be displayed here"
+      :placeholder="t('tools.otp-generator.epochPlaceholder')"
     />
 
-    <p>Iteration</p>
+    <p>{{ t('tools.otp-generator.iteration') }}</p>
 
     <InputCopyable
       :value="String(getCounterFromTime({ now, timeStep: 30 }))"
       readonly
-      label="Count:"
+      :label="t('tools.otp-generator.count')"
       label-position="left"
       label-width="90px"
       label-align="right"
-      placeholder="Iteration count will be displayed here"
+      :placeholder="t('tools.otp-generator.iterationCountPlaceholder')"
     />
 
     <InputCopyable
       :value="getCounterFromTime({ now, timeStep: 30 }).toString(16).padStart(16, '0')"
       readonly
-      placeholder="Iteration count in hex will be displayed here"
+      :placeholder="t('tools.otp-generator.iterationCountInHexPlaceholder')"
       label-position="left"
       label-width="90px"
       label-align="right"
-      label="Padded hex:"
+      :label="t('tools.otp-generator.paddedHex')"
     />
   </div>
 </template>

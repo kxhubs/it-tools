@@ -3,6 +3,8 @@
 import { AES, RC4, Rabbit, TripleDES, enc } from 'crypto-js';
 import { ref, watch } from 'vue';
 
+const { t } = useI18n();
+
 // Available modes for AES
 const aesModes = [
   { label: 'CBC (CryptoJS)', value: 'CBC' },
@@ -17,7 +19,7 @@ const canUseWebCrypto = typeof window !== 'undefined'
 // Functions for AES-GCM using Web Crypto API
 async function webCryptoEncrypt(algo: 'AES-GCM', text: string, secret: string, ivHex?: string) {
   if (!canUseWebCrypto) {
-    throw new Error('Web Crypto API not available');
+    throw new Error(t('tools.encryption.webCryptoNotAvailable'));
   }
   // Encode the plaintext and secret key
   const encText = new TextEncoder().encode(text);
@@ -52,7 +54,7 @@ async function webCryptoEncrypt(algo: 'AES-GCM', text: string, secret: string, i
 
 async function webCryptoDecrypt(algo: 'AES-GCM', b64: string, secret: string) {
   if (!canUseWebCrypto) {
-    throw new Error('Web Crypto API not available');
+    throw new Error(t('tools.encryption.webCryptoNotAvailable'));
   }
   try {
     // Decode base64 and extract IV and ciphertext
@@ -78,7 +80,7 @@ async function webCryptoDecrypt(algo: 'AES-GCM', b64: string, secret: string) {
     return new TextDecoder().decode(plain);
   }
   catch {
-    throw new Error('Unable to decrypt your text');
+    throw new Error(t('tools.encryption.unableToDecrypt'));
   }
 };
 
@@ -155,12 +157,12 @@ watch([cypherInput, cypherSecret, cypherAlgo, cypherAesMode, cypherIV], async ()
     const mode = cypherAesMode.value;
     const algo = algos.AES;
     if (mode === 'GCM') {
-      cypherOutput.value = 'Encrypting...';
+      cypherOutput.value = t('tools.encryption.encrypting');
       try {
         const ivHex = cypherIV.value;
         // Validate IV for GCM mode
         if (!/^[0-9a-fA-F]{24}$/.test(ivHex)) {
-          cypherOutput.value = 'IV must be 24 hex characters (12 bytes)';
+          cypherOutput.value = t('tools.encryption.ivMustBe24Hex');
           return;
         }
         // Pass IV to webCryptoEncrypt
@@ -177,7 +179,7 @@ watch([cypherInput, cypherSecret, cypherAlgo, cypherAesMode, cypherIV], async ()
       }
       catch {
         if (revision === encryptionRevision) {
-          cypherOutput.value = 'Encryption error';
+          cypherOutput.value = t('tools.encryption.encryptionError');
         }
       }
     }
@@ -213,7 +215,7 @@ watch([decryptInput, decryptSecret, decryptAlgo, decryptAesMode], async () => {
     const mode = decryptAesMode.value;
     const algo = algos.AES;
     if (mode === 'GCM') {
-      decryptOutput.value = 'Decrypting...';
+      decryptOutput.value = t('tools.encryption.decrypting');
       try {
         const decryptionResult = algo.decrypt(mode, decryptInput.value, decryptSecret.value);
         if (decryptionResult && typeof decryptionResult._async === 'function') {
@@ -224,13 +226,13 @@ watch([decryptInput, decryptSecret, decryptAlgo, decryptAesMode], async () => {
           decryptOutput.value = result;
         }
         else {
-          throw new Error('Invalid decryption result or unsupported mode.');
+          throw new Error(t('tools.encryption.invalidDecryptionResult'));
         }
       }
       catch (e: any) {
         if (revision === decryptionRevision) {
           decryptOutput.value = '';
-          decryptError.value = e?.message || 'Unable to decrypt your text';
+          decryptError.value = e?.message || t('tools.encryption.unableToDecrypt');
         }
       }
     }
@@ -240,7 +242,7 @@ watch([decryptInput, decryptSecret, decryptAlgo, decryptAesMode], async () => {
       }
       catch {
         decryptOutput.value = '';
-        decryptError.value = 'Unable to decrypt your text';
+        decryptError.value = t('tools.encryption.unableToDecrypt');
       }
     }
   }
@@ -251,7 +253,7 @@ watch([decryptInput, decryptSecret, decryptAlgo, decryptAesMode], async () => {
     }
     catch {
       decryptOutput.value = '';
-      decryptError.value = 'Unable to decrypt your text';
+      decryptError.value = t('tools.encryption.unableToDecrypt');
     }
   }
 }, { immediate: true });
@@ -259,85 +261,85 @@ watch([decryptInput, decryptSecret, decryptAlgo, decryptAesMode], async () => {
 
 <template>
   <!-- Encryption card UI -->
-  <c-card title="Encrypt">
+  <c-card :title="t('tools.encryption.encryptTitle')">
     <div flex gap-3>
       <c-input-text
         v-model:value="cypherInput"
-        label="Your text:"
-        placeholder="The string to cypher"
+        :label="t('tools.encryption.textLabel')"
+        :placeholder="t('tools.encryption.textPlaceholder')"
         rows="4"
         raw-text autosize multiline monospace flex-1
       />
       <div flex flex-1 flex-col gap-2>
-        <c-input-text v-model:value="cypherSecret" label="Your secret key:" raw-text clearable />
+        <c-input-text v-model:value="cypherSecret" :label="t('tools.encryption.secretKeyLabel')" raw-text clearable />
         <c-select
           v-model:value="cypherAlgo"
-          label="Encryption algorithm:"
+          :label="t('tools.encryption.algorithmLabel')"
           :options="Object.keys(algos).map((label) => ({ label, value: label }))"
         />
         <!-- Show modes only if AES is selected -->
         <c-select
           v-if="cypherAlgo === 'AES'"
           v-model:value="cypherAesMode"
-          label="AES mode:"
+          :label="t('tools.encryption.aesModeLabel')"
           :options="aesModes"
         />
         <!-- Editable IV only for GCM, below the mode selector -->
         <c-input-text
           v-if="cypherAlgo === 'AES' && cypherAesMode === 'GCM'"
           v-model:value="cypherIV"
-          label="IV (hex):"
+          :label="t('tools.encryption.ivLabel')"
           maxlength="24"
           monospace
           clearable
-          placeholder="24 hex chars"
+          :placeholder="t('tools.encryption.ivPlaceholder')"
           suffix-icon="i-carbon-renew"
           @click-suffix="cypherIV = generateRandomIVHex(12)"
         />
       </div>
     </div>
     <c-input-text
-      label="Your text encrypted:"
+      :label="t('tools.encryption.encryptedTextLabel')"
       :value="cypherOutput"
       rows="3"
-      placeholder="Your string hash"
+      :placeholder="t('tools.encryption.encryptedTextPlaceholder')"
       multiline monospace autosize readonly mt-5
     />
   </c-card>
   <!-- Decryption card UI -->
-  <c-card title="Decrypt">
+  <c-card :title="t('tools.encryption.decryptTitle')">
     <div flex gap-3>
       <c-input-text
         v-model:value="decryptInput"
-        label="Your encrypted text:"
-        placeholder="The string to cypher"
+        :label="t('tools.encryption.encryptedInputLabel')"
+        :placeholder="t('tools.encryption.textPlaceholder')"
         rows="4"
         multiline raw-text monospace autosize flex-1
       />
       <div flex flex-1 flex-col gap-2>
-        <c-input-text v-model:value="decryptSecret" label="Your secret key:" clearable raw-text />
+        <c-input-text v-model:value="decryptSecret" :label="t('tools.encryption.secretKeyLabel')" clearable raw-text />
         <c-select
           v-model:value="decryptAlgo"
-          label="Encryption algorithm:"
+          :label="t('tools.encryption.algorithmLabel')"
           :options="Object.keys(algos).map((label) => ({ label, value: label }))"
         />
         <!-- Show modes only if AES is selected -->
         <c-select
           v-if="decryptAlgo === 'AES'"
           v-model:value="decryptAesMode"
-          label="AES mode:"
+          :label="t('tools.encryption.aesModeLabel')"
           :options="aesModes"
         />
       </div>
     </div>
-    <c-alert v-if="decryptError" type="error" mt-12 title="Error while decrypting">
+    <c-alert v-if="decryptError" type="error" mt-12 :title="t('tools.encryption.decryptErrorTitle')">
       {{ decryptError }}
     </c-alert>
     <c-input-text
       v-else
-      label="Your decrypted text:"
+      :label="t('tools.encryption.decryptedTextLabel')"
       :value="decryptOutput"
-      placeholder="Your string hash"
+      :placeholder="t('tools.encryption.encryptedTextPlaceholder')"
       rows="3"
       multiline monospace readonly autosize mt-5
     />

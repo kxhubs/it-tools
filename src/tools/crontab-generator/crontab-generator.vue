@@ -5,6 +5,7 @@ import { type CronType, getCronDescription, getNextExecutionTimes, isCronValid }
 import { useStyleStore } from '@/stores/style.store';
 import { useQueryParamOrStorage } from '@/composable/queryParams';
 
+const { t } = useI18n();
 const styleStore = useStyleStore();
 
 const cron = ref('40 * * * *');
@@ -24,7 +25,7 @@ const allTimezones = Object.values(ctz.getAllTimezones()).map((tz) => {
   const timezoneUTCDSTOffset = tz.utcOffset === tz.dstOffset ? tz.utcOffsetStr : `${tz.utcOffsetStr}/${tz.dstOffsetStr}`;
   return {
     value: tz.name,
-    label: `${tz.name === browserTimezone ? 'Browser TZ - ' : ''}${tz.name} (${timezoneUTCDSTOffset})`,
+    label: `${tz.name === browserTimezone ? t('tools.crontab-generator.browserTimezonePrefix') : ''}${tz.name} (${timezoneUTCDSTOffset})`,
   };
 });
 const currentTimezone = useQueryParamOrStorage({ name: 'tz', storageName: 'crongen:tz', defaultValue: browserTimezone });
@@ -37,27 +38,27 @@ watchEffect(() => {
 const commonHelpers = [
   {
     symbol: '*',
-    meaning: 'Any value',
+    meaning: t('tools.crontab-generator.helperAnyValue'),
     example: '* * * *',
-    equivalent: 'Every minute',
+    equivalent: t('tools.crontab-generator.helperEveryMinute'),
   },
   {
     symbol: '-',
-    meaning: 'Range of values',
+    meaning: t('tools.crontab-generator.helperRangeOfValues'),
     example: '1-10 * * *',
-    equivalent: 'Minutes 1 through 10',
+    equivalent: t('tools.crontab-generator.helperMinutes1Through10'),
   },
   {
     symbol: ',',
-    meaning: 'List of values',
+    meaning: t('tools.crontab-generator.helperListOfValues'),
     example: '1,10 * * *',
-    equivalent: 'At minutes 1 and 10',
+    equivalent: t('tools.crontab-generator.helperAtMinutes1And10'),
   },
   {
     symbol: '/',
-    meaning: 'Step values',
+    meaning: t('tools.crontab-generator.helperStepValues'),
     example: '*/10 * * *',
-    equivalent: 'Every 10 minutes',
+    equivalent: t('tools.crontab-generator.helperEvery10Minutes'),
   },
 ];
 
@@ -65,49 +66,49 @@ const standardHelpers = [
   ...commonHelpers,
   {
     symbol: '@yearly',
-    meaning: 'Once every year at midnight of 1 January',
+    meaning: t('tools.crontab-generator.helperYearlyMeaning'),
     example: '@yearly',
     equivalent: '0 0 1 1 *',
   },
   {
     symbol: '@annually',
-    meaning: 'Same as @yearly',
+    meaning: t('tools.crontab-generator.helperAnnuallyMeaning'),
     example: '@annually',
     equivalent: '0 0 1 1 *',
   },
   {
     symbol: '@monthly',
-    meaning: 'Once a month at midnight on the first day',
+    meaning: t('tools.crontab-generator.helperMonthlyMeaning'),
     example: '@monthly',
     equivalent: '0 0 1 * *',
   },
   {
     symbol: '@weekly',
-    meaning: 'Once a week at midnight on Sunday morning',
+    meaning: t('tools.crontab-generator.helperWeeklyMeaning'),
     example: '@weekly',
     equivalent: '0 0 * * 0',
   },
   {
     symbol: '@daily',
-    meaning: 'Once a day at midnight',
+    meaning: t('tools.crontab-generator.helperDailyMeaning'),
     example: '@daily',
     equivalent: '0 0 * * *',
   },
   {
     symbol: '@midnight',
-    meaning: 'Same as @daily',
+    meaning: t('tools.crontab-generator.helperMidnightMeaning'),
     example: '@midnight',
     equivalent: '0 0 * * *',
   },
   {
     symbol: '@hourly',
-    meaning: 'Once an hour at the beginning of the hour',
+    meaning: t('tools.crontab-generator.helperHourlyMeaning'),
     example: '@hourly',
     equivalent: '0 * * * *',
   },
   {
     symbol: '@reboot',
-    meaning: 'Run at startup',
+    meaning: t('tools.crontab-generator.helperRebootMeaning'),
     example: '',
     equivalent: '',
   },
@@ -117,27 +118,27 @@ const awsHelpers = [
   ...commonHelpers,
   {
     symbol: '?',
-    meaning: 'One or another. In the Day-of-month field you could enter 7, and if you didn\'t care what day of the week the seventh was, you could enter ? in the Day-of-week field',
+    meaning: t('tools.crontab-generator.helperQuestionMeaning'),
     example: '9 * 7,9,11 5 ? 2021',
-    equivalent: 'At 9 minutes past the hour, every hour, on day 7, 9, and 11 of the month, only in May, only in 2021',
+    equivalent: t('tools.crontab-generator.helperQuestionEquivalent'),
   },
   {
     symbol: 'L',
-    meaning: 'The L wildcard in the Day-of-month or Day-of-week fields specifies the last day of the month or week.',
+    meaning: t('tools.crontab-generator.helperLMeaning'),
     example: '9 * L 5 ? 2019,2020',
-    equivalent: 'At 9 minutes past the hour, every hour, on the last day of the month, only in May, only in 2019 and 2020',
+    equivalent: t('tools.crontab-generator.helperLEquivalent'),
   },
   {
     symbol: 'W',
-    meaning: 'The W wildcard in the Day-of-month field specifies a weekday. In the Day-of-month field, 3W specifies the day closest to the third weekday of the month.',
+    meaning: t('tools.crontab-generator.helperWMeaning'),
     example: '19 4 3W 9 ? 2019,2020',
-    equivalent: 'At 04:19 AM, on the weekday nearest day 3 of the month, only in September, only in 2019 and 2020',
+    equivalent: t('tools.crontab-generator.helperWEquivalent'),
   },
   {
     symbol: '#',
-    meaning: 'The # wildcard in the Day-of-week field specifies the nieth weekday of the month. 3#5 specifies the fifth Wednesday of the month',
+    meaning: t('tools.crontab-generator.helperHashMeaning'),
     example: '9 8-20 ? 12 3#5 2019,2020',
-    equivalent: 'At 9 minutes past the hour, between 08:00 AM and 08:59 PM, on the fifth Wednesday of the month, only in December, only in 2019 and 2020',
+    equivalent: t('tools.crontab-generator.helperHashEquivalent'),
   },
 ];
 
@@ -172,7 +173,7 @@ const cronString = computed(() => {
 const cronValidationRules = [
   {
     validator: (value: string) => isCronValid(value, cronType.value),
-    message: 'This cron is invalid',
+    message: t('tools.crontab-generator.invalidCron'),
   },
 ];
 
@@ -181,7 +182,7 @@ const executionTimesString = computed(() => {
     try {
       const nextExecutionTimes = getNextExecutionTimes(cron.value, currentTimezone.value);
       const executionTimesString = nextExecutionTimes.join('\n');
-      return `Next 5 execution times:\n${executionTimesString}`;
+      return `${t('tools.crontab-generator.next5ExecutionTimes')}\n${executionTimesString}`;
     }
     catch (e: any) {
       return e.toString();
@@ -207,7 +208,7 @@ const executionTimesString = computed(() => {
       <n-space>
         <n-radio
           value="standard"
-          label="Unix standard"
+          :label="t('tools.crontab-generator.unixStandard')"
         />
         <n-radio
           value="aws"
@@ -228,34 +229,34 @@ const executionTimesString = computed(() => {
 
     <div flex justify-center>
       <n-form :show-feedback="false" label-width="170" label-placement="left">
-        <n-form-item label="Verbose">
+        <n-form-item :label="t('tools.crontab-generator.verbose')">
           <n-switch v-model:value="cronstrueConfig.verbose" />
         </n-form-item>
-        <n-form-item label="Use 24 hour time format">
+        <n-form-item :label="t('tools.crontab-generator.use24HourTimeFormat')">
           <n-switch v-model:value="cronstrueConfig.use24HourTimeFormat" />
         </n-form-item>
-        <n-form-item label="Days start at 0">
+        <n-form-item :label="t('tools.crontab-generator.daysStartAt0')">
           <n-switch v-model:value="cronstrueConfig.dayOfWeekStartIndexZero" />
         </n-form-item>
-        <n-form-item label="Months start at 0">
+        <n-form-item :label="t('tools.crontab-generator.monthsStartAt0')">
           <n-switch v-model:value="cronstrueConfig.monthStartIndexZero" />
         </n-form-item>
         <c-select
           v-model:value="currentTimezone"
           searchable
-          label="Timezone:"
+          :label="t('tools.crontab-generator.timezone')"
           :options="allTimezones"
           :disabled="cronType === 'aws'"
         />
         <div v-if="cronType === 'aws'" op-60>
-          AWS cron schedules are evaluated in UTC.
+          {{ t('tools.crontab-generator.awsCronSchedulesAreEvaluatedInUtc') }}
         </div>
       </n-form>
     </div>
   </c-card>
   <c-card>
     <pre v-if="cronType === 'standard'">
-      -- Standard CRON Syntax --
+      -- {{ t('tools.crontab-generator.standardCronSyntax') }} --
 ┌──────────── [optional] seconds (0 - 59)
 | ┌────────── minute (0 - 59)
 | | ┌──────── hour (0 - 23)
@@ -266,7 +267,7 @@ const executionTimesString = computed(() => {
 * * * * * * command</pre>
 
     <pre v-if="cronType === 'aws'">
-      -- AWS CRON Syntax --
+      -- {{ t('tools.crontab-generator.awsCronSyntax') }} --
 ┌──────────── minute (0 - 59)
 | ┌────────── hour (0 - 23)
 | | ┌──────── day of month (1 - 31) OR ? OR L OR W
@@ -279,17 +280,17 @@ const executionTimesString = computed(() => {
     <div v-if="styleStore.isSmallScreen">
       <c-card v-for="{ symbol, meaning, example, equivalent } in getHelpers" :key="symbol" mb-3 important:border-none>
         <div>
-          Symbol: <strong>{{ symbol }}</strong>
+          {{ t('tools.crontab-generator.symbol') }} <strong>{{ symbol }}</strong>
         </div>
         <div>
-          Meaning: <strong>{{ meaning }}</strong>
+          {{ t('tools.crontab-generator.meaning') }} <strong>{{ meaning }}</strong>
         </div>
         <div>
-          Example:
+          {{ t('tools.crontab-generator.example') }}
           <strong><code>{{ example }}</code></strong>
         </div>
         <div>
-          Equivalent: <strong>{{ equivalent }}</strong>
+          {{ t('tools.crontab-generator.equivalent') }} <strong>{{ equivalent }}</strong>
         </div>
       </c-card>
     </div>

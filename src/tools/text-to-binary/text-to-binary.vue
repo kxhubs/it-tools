@@ -10,49 +10,50 @@ const { copy: copyBinary } = useCopy({ source: binaryFromText });
 
 const inputBinary = ref('');
 const textFromBinary = computed(() => withDefaultOnError(() => convertUtf8BinaryToText(inputBinary.value), ''));
+const { t } = useI18n();
 const inputBinaryValidationRules = [
   {
     validator: (value: string) => isNotThrowing(() => convertUtf8BinaryToText(value)),
-    message: 'Binary should be a valid UTF-8 binary string with multiples of 8 bits',
+    message: t('tools.text-to-binary.binaryValidationMessage'),
   },
 ];
 const { copy: copyText } = useCopy({ source: textFromBinary });
 </script>
 
 <template>
-  <c-card title="Text to UTF-8 binary">
+  <c-card :title="t('tools.text-to-binary.textToBinaryTitle')">
     <c-input-text
       v-model:value="inputText"
 
-      placeholder="e.g. 'Hello world'"
-      label="Enter text to convert to binary"
+      :placeholder="t('tools.text-to-binary.textPlaceholder')"
+      :label="t('tools.text-to-binary.textInputLabel')"
 
       autosize autofocus raw-text multiline
       test-id="text-to-binary-input"
     />
     <c-input-text
       v-model:value="binaryFromText"
-      label="Binary from your text"
+      :label="t('tools.text-to-binary.binaryOutputLabel')"
       multiline
       raw-text
       readonly
       mt-2
-      placeholder="The binary representation of your text will be here"
+      :placeholder="t('tools.text-to-binary.binaryOutputPlaceholder')"
       test-id="text-to-binary-output"
     />
     <div mt-2 flex justify-center>
       <c-button :disabled="!binaryFromText" @click="copyBinary()">
-        Copy binary to clipboard
+        {{ t('tools.text-to-binary.copyBinary') }}
       </c-button>
     </div>
   </c-card>
 
-  <c-card title="UTF-8 binary to text">
+  <c-card :title="t('tools.text-to-binary.binaryToTextTitle')">
     <c-input-text
       v-model:value="inputBinary"
       multiline
-      placeholder="e.g. '01001000 01100101 01101100 01101100 01101111'"
-      label="Enter binary to convert to text"
+      :placeholder="t('tools.text-to-binary.binaryPlaceholder')"
+      :label="t('tools.text-to-binary.binaryInputLabel')"
       autosize
       raw-text
       :validation-rules="inputBinaryValidationRules"
@@ -60,17 +61,17 @@ const { copy: copyText } = useCopy({ source: textFromBinary });
     />
     <c-input-text
       v-model:value="textFromBinary"
-      label="Text from your binary"
+      :label="t('tools.text-to-binary.textOutputLabel')"
       multiline
       raw-text
       readonly
       mt-2
-      placeholder="The text representation of your binary will be here"
+      :placeholder="t('tools.text-to-binary.textOutputPlaceholder')"
       test-id="binary-to-text-output"
     />
     <div mt-2 flex justify-center>
       <c-button :disabled="!textFromBinary" @click="copyText()">
-        Copy text to clipboard
+        {{ t('tools.text-to-binary.copyText') }}
       </c-button>
     </div>
   </c-card>
