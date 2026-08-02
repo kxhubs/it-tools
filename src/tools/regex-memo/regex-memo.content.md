@@ -1,121 +1,123 @@
-### Normal characters
+# 正则表达式备忘录
 
-Expression | Description
-:--|:--
-`.` or `[^\n\r]` | any character *excluding* a newline or carriage return
-`[A-Za-z]` | alphabet
-`[a-z]` | lowercase alphabet
-`[A-Z]` | uppercase alphabet
-`\d` or `[0-9]` | digit
-`\D` or `[^0-9]` | non-digit
-`_` | underscore
-`\w` or `[A-Za-z0-9_]` | alphabet, digit or underscore
-`\W` or `[^A-Za-z0-9_]` | inverse of `\w`
-`\S` | inverse of `\s`
+## 普通字符
 
-### Whitespace characters
+表达式 | 说明
+:-- | :--
+`.` 或 `[^\n\r]` | 任意字符(*不包括*换行符或回车符)
+`[A-Za-z]` | 字母
+`[a-z]` | 小写字母
+`[A-Z]` | 大写字母
+`\d` 或 `[0-9]` | 数字
+`\D` 或 `[^0-9]` | 非数字
+`_` | 下划线
+`\w` 或 `[A-Za-z0-9_]` | 字母、数字或下划线
+`\W` 或 `[^A-Za-z0-9_]` | `\w` 的反集
+`\S` | `\s` 的反集
 
-Expression | Description
-:--|:--
-` ` | space
-`\t` | tab
-`\n` | newline
-`\r` | carriage return
-`\s` | space, tab, newline or carriage return
+## 空白字符
 
-### Character set
+表达式 | 说明
+:-- | :--
+` ` | 空格
+`\t` | 制表符
+`\n` | 换行符
+`\r` | 回车符
+`\s` | 空格、制表符、换行符或回车符
 
-Expression | Description
-:--|:--
-`[xyz]` | either `x`, `y` or `z`
-`[^xyz]` | neither `x`, `y` nor `z`
-`[1-3]` | either `1`, `2` or `3`
-`[^1-3]` | neither `1`, `2` nor `3`
+## 字符集
 
-- Think of a character set as an `OR` operation on the single characters that are enclosed between the square brackets.
-- Use `^` after the opening `[` to “negate” the character set.
-- Within a character set, `.` means a literal period.
+表达式 | 说明
+:-- | :--
+`[xyz]` | 匹配 `x`、`y` 或 `z` 中的任意一个
+`[^xyz]` | 匹配 `x`、`y` 或 `z` 之外的任意字符
+`[1-3]` | 匹配 `1`、`2` 或 `3` 中的任意一个
+`[^1-3]` | 匹配 `1`、`2` 或 `3` 之外的任意字符
 
-### Characters that require escaping
+- 可以把字符集看作是对方括号内单个字符的 `OR`(或)操作。
+- 在开头的 `[` 后面使用 `^` 可以"取反"字符集。
+- 在字符集内部,`.` 表示一个字面句点。
 
-#### Outside a character set
+## 需要转义的字符
 
-Expression | Description
-:--|:--
-`\.` | period
-`\^` | caret
-`\$` | dollar sign
-`\|` | pipe
-`\\` | back slash
-`\/` | forward slash
-`\(` | opening bracket
-`\)` | closing bracket
-`\[` | opening square bracket
-`\]` | closing square bracket
-`\{` | opening curly bracket
-`\}` | closing curly bracket
+## 在字符集外
 
-#### Inside a character set
+表达式 | 说明
+:-- | :--
+`\.` | 句点
+`\^` | 脱字符(插入符)
+`\$` | 美元符号
+`\|` | 竖线(管道符)
+`\\` | 反斜杠
+`\/` | 正斜杠
+`\(` | 左圆括号
+`\)` | 右圆括号
+`\[` | 左方括号
+`\]` | 右方括号
+`\{` | 左花括号
+`\}` | 右花括号
 
-Expression | Description
-:--|:--
-`\\` | back slash
-`\]` | closing square bracket
+## 在字符集内
 
-- A `^` must be escaped only if it occurs immediately after the opening `[` of the character set.
-- A `-` must be escaped only if it occurs between two alphabets or two digits.
+表达式 | 说明
+:-- | :--
+`\\` | 反斜杠
+`\]` | 右方括号
 
-### Quantifiers
+- 只有当 `^` 紧跟在字符集的左括号 `[` 之后时才需要转义。
+- 只有当 `-` 出现在两个字母或两个数字之间时才需要转义。
 
-Expression | Description
-:--|:--
-`{2}` | exactly 2
-`{2,}` | at least 2
-`{2,7}` | at least 2 but no more than 7
-`*` | 0 or more
-`+` | 1 or more
-`?` | exactly 0 or 1
+## 量词
 
-- The quantifier goes *after* the expression to be quantified.
+表达式 | 说明
+:-- | :--
+`{2}` | 恰好 2 次
+`{2,}` | 至少 2 次
+`{2,7}` | 至少 2 次但不超过 7 次
+`*` | 0 次或更多
+`+` | 1 次或更多
+`?` | 恰好 0 次或 1 次
 
-### Boundaries
+- 量词位于被量化的表达式*之后*。
 
-Expression | Description
-:--|:--
-`^` | start of string
-`$` | end of string
-`\b` | word boundary
+## 边界
 
-- How word boundary matching works:
-    - At the beginning of the string if the first character is `\w`.
-    - Between two adjacent characters within the string, if the first character is `\w` and the second character is `\W`.
-    - At the end of the string if the last character is `\w`.
+表达式 | 说明
+:-- | :--
+`^` | 字符串开头
+`$` | 字符串结尾
+`\b` | 单词边界
 
-### Matching
+- 单词边界匹配的规则:
+  - 如果字符串第一个字符是 `\w`,则匹配字符串开头。
+  - 在字符串内两个相邻字符之间,如果第一个字符是 `\w` 而第二个字符是 `\W`,则匹配。
+  - 如果字符串最后一个字符是 `\w`,则匹配字符串结尾。
 
-Expression | Description
-:--|:--
-`foo\|bar` | match either `foo` or `bar`
-`foo(?=bar)` | match `foo` if it’s before `bar`
-`foo(?!bar)` | match `foo` if it’s *not* before `bar`
-`(?<=bar)foo` | match `foo` if it’s after `bar`
-`(?<!bar)foo` | match `foo` if it’s *not* after `bar`
+## 匹配
 
-### Grouping and capturing
+表达式 | 说明
+:-- | :--
+`foo\|bar` | 匹配 `foo` 或 `bar`
+`foo(?=bar)` | 匹配 `foo`,条件是它位于 `bar` 之前(正向前瞻)
+`foo(?!bar)` | 匹配 `foo`,条件是它*不*位于 `bar` 之前(负向前瞻)
+`(?<=bar)foo` | 匹配 `foo`,条件是它位于 `bar` 之后(正向后顾)
+`(?<!bar)foo` | 匹配 `foo`,条件是它*不*位于 `bar` 之后(负向后顾)
 
-Expression | Description
-:--|:--
-`(foo)` | capturing group; match and capture `foo`
-`(?:foo)` | non-capturing group; match `foo` but *without* capturing `foo`
-`(foo)bar\1` | `\1` is a backreference to the 1st capturing group; match `foobarfoo`
+## 分组与捕获
 
-- Capturing groups are only relevant in the following methods:
-    - `string.match(regexp)`
-    - `string.matchAll(regexp)`
-    - `string.replace(regexp, callback)`
-- `\N` is a backreference to the `Nth` capturing group. Capturing groups are numbered starting from 1.
+表达式 | 说明
+:-- | :--
+`(foo)` | 捕获组;匹配并捕获 `foo`
+`(?:foo)` | 非捕获组;匹配 `foo` 但*不*捕获 `foo`
+`(foo)bar\1` | `\1` 是对第 1 个捕获组的反向引用;匹配 `foobarfoo`
 
-## References and tools
+- 捕获组只对以下方法有意义:
+  - `string.match(regexp)`
+  - `string.matchAll(regexp)`
+  - `string.replace(regexp, callback)`
+- `\N` 是对第 `N` 个捕获组的反向引用。捕获组从 1 开始编号。
 
-- [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions)
-- [RegExplained](https://leaverou.github.io/regexplained/)
+## 参考资料与工具
+
+- [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions)(正则表达式指南)
+- [RegExplained](https://leaverou.github.io/regexplained/)(正则表达式可视化工具)
