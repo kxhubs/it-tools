@@ -1,35 +1,37 @@
-## Configuration
+# Git 备忘录
 
-Set the global config
+## 配置
+
+设置全局配置
 
 ```shell
 git config --global user.name "[name]"
 git config --global user.email "[email]"
 ```
 
-## Get started
+## 快速开始
 
-Create a git repository
+创建 git 仓库
 
 ```shell
 git init
 ```
 
-Clone an existing git repository
+克隆现有 git 仓库
 
 ```shell
 git clone [url]
 ```
 
-## Commit
+## 提交
 
-Commit all tracked changes
+提交所有已跟踪的更改
 
 ```shell
 git commit -am "[commit message]"
 ```
 
-Add new modifications to the last commit
+将新的修改添加到上一次提交
 
 ```shell
 git commit --amend --no-edit
@@ -68,9 +70,9 @@ git fetch origin
 git reset --hard origin/[branch-name]
 ```
 
-## Miscellaneous
+## 其他
 
-Renaming the local master branch to main
+将本地 master 分支重命名为 main
 
 ```shell
 git branch -m master main
