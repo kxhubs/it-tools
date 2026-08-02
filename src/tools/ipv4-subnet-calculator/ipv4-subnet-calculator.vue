@@ -26,53 +26,53 @@ const sections = computed<{
   getValue: (blocks: Netmask) => string | undefined
   undefinedFallback?: string
 }[]>(() => [
-  {
-    label: t('tools.ipv4-subnet-calculator.netmask'),
-    getValue: block => block.toString(),
-  },
-  {
-    label: t('tools.ipv4-subnet-calculator.networkAddress'),
-    getValue: ({ base }) => base,
-  },
-  {
-    label: t('tools.ipv4-subnet-calculator.networkMask'),
-    getValue: ({ mask }) => mask,
-  },
-  {
-    label: t('tools.ipv4-subnet-calculator.networkMaskInBinary'),
-    getValue: ({ bitmask }) => ('1'.repeat(bitmask) + '0'.repeat(32 - bitmask)).match(/.{8}/g)?.join('.') ?? '',
-  },
-  {
-    label: t('tools.ipv4-subnet-calculator.cidrNotation'),
-    getValue: ({ bitmask }) => `/${bitmask}`,
-  },
-  {
-    label: t('tools.ipv4-subnet-calculator.wildcardMask'),
-    getValue: ({ hostmask }) => hostmask,
-  },
-  {
-    label: t('tools.ipv4-subnet-calculator.networkSize'),
-    getValue: ({ size }) => String(size),
-  },
-  {
-    label: t('tools.ipv4-subnet-calculator.firstAddress'),
-    getValue: ({ first }) => first,
-  },
-  {
-    label: t('tools.ipv4-subnet-calculator.lastAddress'),
-    getValue: ({ last }) => last,
-  },
-  {
-    label: t('tools.ipv4-subnet-calculator.broadcastAddress'),
-    getValue: ({ broadcast }) => broadcast,
-    undefinedFallback: t('tools.ipv4-subnet-calculator.noBroadcastAddress'),
-  },
-  {
-    label: t('tools.ipv4-subnet-calculator.ipClass'),
-    getValue: ({ base: ip }) => getIPClass({ ip }),
-    undefinedFallback: t('tools.ipv4-subnet-calculator.unknownClassType'),
-  },
-]);
+      {
+        label: t('tools.ipv4-subnet-calculator.netmask'),
+        getValue: block => block.toString(),
+      },
+      {
+        label: t('tools.ipv4-subnet-calculator.networkAddress'),
+        getValue: ({ base }) => base,
+      },
+      {
+        label: t('tools.ipv4-subnet-calculator.networkMask'),
+        getValue: ({ mask }) => mask,
+      },
+      {
+        label: t('tools.ipv4-subnet-calculator.networkMaskInBinary'),
+        getValue: ({ bitmask }) => ('1'.repeat(bitmask) + '0'.repeat(32 - bitmask)).match(/.{8}/g)?.join('.') ?? '',
+      },
+      {
+        label: t('tools.ipv4-subnet-calculator.cidrNotation'),
+        getValue: ({ bitmask }) => `/${bitmask}`,
+      },
+      {
+        label: t('tools.ipv4-subnet-calculator.wildcardMask'),
+        getValue: ({ hostmask }) => hostmask,
+      },
+      {
+        label: t('tools.ipv4-subnet-calculator.networkSize'),
+        getValue: ({ size }) => String(size),
+      },
+      {
+        label: t('tools.ipv4-subnet-calculator.firstAddress'),
+        getValue: ({ first }) => first,
+      },
+      {
+        label: t('tools.ipv4-subnet-calculator.lastAddress'),
+        getValue: ({ last }) => last,
+      },
+      {
+        label: t('tools.ipv4-subnet-calculator.broadcastAddress'),
+        getValue: ({ broadcast }) => broadcast,
+        undefinedFallback: t('tools.ipv4-subnet-calculator.noBroadcastAddress'),
+      },
+      {
+        label: t('tools.ipv4-subnet-calculator.ipClass'),
+        getValue: ({ base: ip }) => getIPClass({ ip }),
+        undefinedFallback: t('tools.ipv4-subnet-calculator.unknownClassType'),
+      },
+    ]);
 
 function switchToBlock({ count = 1 }: { count?: number }) {
   const next = networkInfo.value?.next(count);

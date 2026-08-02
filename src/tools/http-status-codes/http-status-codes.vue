@@ -14,10 +14,12 @@ const categoryKeys: Record<string, string> = {
 };
 
 const translateCategory = (category: string) => t(`tools.http-status-codes.${categoryKeys[category]}`);
-const translateCode = (code: number) => ({
-  name: t(`tools.http-status-codes.code${code}.name`),
-  description: t(`tools.http-status-codes.code${code}.description`),
-});
+function translateCode(code: number) {
+  return {
+    name: t(`tools.http-status-codes.code${code}.name`),
+    description: t(`tools.http-status-codes.code${code}.description`),
+  };
+}
 
 // 响应式翻译数据:语言切换时自动更新(搜索与展示共用)
 const translatedCodes = computed(() =>

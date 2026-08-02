@@ -2,9 +2,10 @@
 import type { EmojiInfo } from './emoji.types';
 import { useCopy } from '@/composable/copy';
 
+const props = (defineProps<{ emojiInfo: EmojiInfo }>());
+
 const { t } = useI18n();
 
-const props = (defineProps<{ emojiInfo: EmojiInfo }>());
 const { emojiInfo } = toRefs(props);
 
 const { copy } = useCopy();
