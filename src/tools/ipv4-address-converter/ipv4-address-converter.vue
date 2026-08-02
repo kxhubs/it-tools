@@ -3,6 +3,7 @@ import { convertBase } from '../integer-base-converter/integer-base-converter.mo
 import { ipv4ToInt, ipv4ToIpv6, isValidIpv4 } from './ipv4-address-converter.service';
 import { useValidation } from '@/composable/validation';
 
+const { t } = useI18n();
 const rawIpAddress = useStorage('ipv4-converter:ip', '192.168.1.1');
 
 const convertedSections = computed(() => {
@@ -34,13 +35,13 @@ const convertedSections = computed(() => {
 
 const { attrs: validationAttrs } = useValidation({
   source: rawIpAddress,
-  rules: [{ message: 'Invalid ipv4 address', validator: ip => isValidIpv4({ ip }) }],
+  rules: [{ message: t('tools.ipv4-address-converter.invalidAddress'), validator: ip => isValidIpv4({ ip }) }],
 });
 </script>
 
 <template>
   <div>
-    <c-input-text v-model:value="rawIpAddress" label="The ipv4 address:" placeholder="The ipv4 address..." />
+    <c-input-text v-model:value="rawIpAddress" :label="t('tools.ipv4-address-converter.addressLabel')" :placeholder="t('tools.ipv4-address-converter.addressPlaceholder')" />
 
     <n-divider />
 
@@ -53,7 +54,7 @@ const { attrs: validationAttrs } = useValidation({
       label-align="right"
       mb-2
       :value="validationAttrs.validationStatus === 'error' ? '' : value"
-      placeholder="Set a correct ipv4 address"
+      :placeholder="t('tools.ipv4-address-converter.correctAddressPlaceholder')"
     />
   </div>
 </template>

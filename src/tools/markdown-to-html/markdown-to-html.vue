@@ -2,6 +2,7 @@
 import markdownit from 'markdown-it';
 import TextareaCopyable from '@/components/TextareaCopyable.vue';
 
+const { t } = useI18n();
 const inputMarkdown = ref('');
 const outputHtml = computed(() => {
   const md = markdownit();
@@ -23,21 +24,21 @@ function printHtml() {
     <c-input-text
       v-model:value="inputMarkdown"
       multiline raw-text
-      placeholder="Your Markdown content..."
+      :placeholder="t('tools.markdown-to-html.markdownPlaceholder')"
       rows="8"
       autofocus
-      label="Your Markdown to convert:"
+      :label="t('tools.markdown-to-html.markdownToConvert')"
     />
 
     <n-divider />
 
-    <n-form-item label="Output HTML:">
+    <n-form-item :label="t('tools.markdown-to-html.outputHtml')">
       <TextareaCopyable :value="outputHtml" :word-wrap="true" language="html" />
     </n-form-item>
 
     <div flex justify-center>
       <n-button @click="printHtml">
-        Print as PDF
+        {{ t('tools.markdown-to-html.printAsPdf') }}
       </n-button>
     </div>
   </div>

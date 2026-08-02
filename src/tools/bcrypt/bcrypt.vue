@@ -5,6 +5,8 @@ import { useCopy } from '@/composable/copy';
 
 const themeVars = useThemeVars();
 
+const { t } = useI18n();
+
 interface ExecutionState<T> {
   result: T | null
   percentage: number
@@ -65,7 +67,7 @@ const saltCount = ref(10);
 initWatcher('hash', [input, saltCount], hashState);
 
 const source = computed(() => hashState.value.result ?? '');
-const { copy } = useCopy({ source, text: 'Hashed string copied to the clipboard' });
+const { copy } = useCopy({ source, text: t('tools.bcrypt.copiedHash') });
 
 const compareState = ref<ExecutionState<boolean>>(blankState());
 const compareString = ref('');
@@ -74,54 +76,54 @@ initWatcher('compare', [compareString, compareHash], compareState);
 </script>
 
 <template>
-  <c-card title="Hash">
+  <c-card :title="t('tools.bcrypt.hashTitle')">
     <c-input-text
       v-model:value="input"
-      placeholder="Your string to bcrypt..."
+      :placeholder="t('tools.bcrypt.inputPlaceholder')"
       raw-text
-      label="Your string: "
+      :label="t('tools.bcrypt.inputLabel')"
       label-position="left"
       label-align="right"
       label-width="120px"
       mb-2
     />
-    <n-form-item label="Salt count: " label-placement="left" label-width="120">
-      <n-input-number v-model:value="saltCount" placeholder="Salt rounds..." :max="20" :min="0" w-full />
+    <n-form-item :label="t('tools.bcrypt.saltCountLabel')" label-placement="left" label-width="120">
+      <n-input-number v-model:value="saltCount" :placeholder="t('tools.bcrypt.saltRoundsPlaceholder')" :max="20" :min="0" w-full />
     </n-form-item>
 
     <n-progress :percentage="hashState.percentage" :show-indicator="false" />
     <c-input-text
       :value="hashState.result ?? undefined"
-      :placeholder="hashState.error ?? 'Hashed string'"
+      :placeholder="hashState.error ?? t('tools.bcrypt.hashedStringPlaceholder')"
       readonly
       text-center
     />
     <div mt-1 h-3 op-60>
-      {{ hashState.timeTakenMs == null ? '' : `Hashed in ${hashState.timeTakenMs}\xA0ms` }}
+      {{ hashState.timeTakenMs == null ? '' : t('tools.bcrypt.hashedIn', { time: hashState.timeTakenMs }) }}
     </div>
 
     <div mt-5 flex justify-center>
       <c-button @click="copy()">
-        Copy hash
+        {{ t('tools.bcrypt.copyHash') }}
       </c-button>
     </div>
   </c-card>
 
-  <c-card title="Compare string with hash">
+  <c-card :title="t('tools.bcrypt.compareTitle')">
     <n-form label-width="120">
-      <n-form-item label="Your string: " label-placement="left">
-        <c-input-text v-model:value="compareString" placeholder="Your string to compare..." raw-text />
+      <n-form-item :label="t('tools.bcrypt.compareStringLabel')" label-placement="left">
+        <c-input-text v-model:value="compareString" :placeholder="t('tools.bcrypt.compareStringPlaceholder')" raw-text />
       </n-form-item>
-      <n-form-item label="Your hash: " label-placement="left">
-        <c-input-text v-model:value="compareHash" placeholder="Your hash to compare..." raw-text />
+      <n-form-item :label="t('tools.bcrypt.compareHashLabel')" label-placement="left">
+        <c-input-text v-model:value="compareHash" :placeholder="t('tools.bcrypt.compareHashPlaceholder')" raw-text />
       </n-form-item>
 
       <n-progress :percentage="compareState.percentage" :show-indicator="false" />
       <div>
         <c-input-text
           id="bcrypt-compare-result"
-          :value="compareState.result == null ? undefined : compareState.result ? 'Matched' : 'No match'"
-          :placeholder="compareState.error ?? 'Comparison result'"
+          :value="compareState.result == null ? undefined : compareState.result ? t('tools.bcrypt.matched') : t('tools.bcrypt.noMatch')"
+          :placeholder="compareState.error ?? t('tools.bcrypt.comparisonResultPlaceholder')"
           readonly
           text-center
           class="compare-result"
@@ -129,7 +131,7 @@ initWatcher('compare', [compareString, compareHash], compareState);
         />
       </div>
       <div mb-1 mt-1 h-3 op-60>
-        {{ compareState.timeTakenMs == null ? '' : `Compared in ${compareState.timeTakenMs}\xA0ms` }}
+        {{ compareState.timeTakenMs == null ? '' : t('tools.bcrypt.comparedIn', { time: compareState.timeTakenMs }) }}
       </div>
     </n-form>
   </c-card>

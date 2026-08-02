@@ -10,46 +10,48 @@ import { buildColorFormat } from './color-converter.models';
 
 extend([cmykPlugin, hwbPlugin, namesPlugin, lchPlugin]);
 
+const { t } = useI18n();
+
 const formats = {
   picker: buildColorFormat({
-    label: 'color picker',
+    label: t('tools.color-converter.colorPicker'),
     format: (v: Colord) => v.toHex(),
     type: 'color-picker',
   }),
   hex: buildColorFormat({
     label: 'hex',
     format: (v: Colord) => v.toHex(),
-    placeholder: 'e.g. #ff0000',
+    placeholder: t('tools.color-converter.hexPlaceholder'),
   }),
   rgb: buildColorFormat({
     label: 'rgb',
     format: (v: Colord) => v.toRgbString(),
-    placeholder: 'e.g. rgb(255, 0, 0)',
+    placeholder: t('tools.color-converter.rgbPlaceholder'),
   }),
   hsl: buildColorFormat({
     label: 'hsl',
     format: (v: Colord) => v.toHslString(),
-    placeholder: 'e.g. hsl(0, 100%, 50%)',
+    placeholder: t('tools.color-converter.hslPlaceholder'),
   }),
   hwb: buildColorFormat({
     label: 'hwb',
     format: (v: Colord) => v.toHwbString(),
-    placeholder: 'e.g. hwb(0, 0%, 0%)',
+    placeholder: t('tools.color-converter.hwbPlaceholder'),
   }),
   lch: buildColorFormat({
     label: 'lch',
     format: (v: Colord) => v.toLchString(),
-    placeholder: 'e.g. lch(53.24, 104.55, 40.85)',
+    placeholder: t('tools.color-converter.lchPlaceholder'),
   }),
   cmyk: buildColorFormat({
     label: 'cmyk',
     format: (v: Colord) => v.toCmykString(),
-    placeholder: 'e.g. cmyk(0, 100%, 100%, 0)',
+    placeholder: t('tools.color-converter.cmykPlaceholder'),
   }),
   name: buildColorFormat({
-    label: 'name',
-    format: (v: Colord) => v.toName({ closest: true }) ?? 'Unknown',
-    placeholder: 'e.g. red',
+    label: t('tools.color-converter.nameLabel'),
+    format: (v: Colord) => v.toName({ closest: true }) ?? t('tools.color-converter.unknown'),
+    placeholder: t('tools.color-converter.namePlaceholder'),
   }),
 };
 

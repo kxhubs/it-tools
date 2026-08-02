@@ -38,6 +38,7 @@ const sections = computed(() => {
   return secs;
 });
 
+const { t } = useI18n();
 const metaTags = computed(() => {
   const twitterMeta = _.chain(metadata.value)
     .pickBy((_value, k) => k.startsWith('twitter:'))
@@ -83,7 +84,7 @@ const metaTags = computed(() => {
     </div>
   </div>
   <div>
-    <n-form-item label="Your meta tags">
+    <n-form-item :label="t('tools.og-meta-generator.yourMetaTags')">
       <TextareaCopyable :value="metaTags" language="html" />
     </n-form-item>
   </div>
