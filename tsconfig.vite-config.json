@@ -1,4 +1,5 @@
 {
+  // Vite 构建配置的 TypeScript 项目,基于 @tsconfig/node18 的基础配置
   "extends": "@tsconfig/node18/tsconfig.json",
   "include": ["vite.config.*"],
   "compilerOptions": {
