@@ -6,8 +6,6 @@ import { useTheme } from './c-select.theme';
 import { clamp } from '@/modules/shared/number.models';
 import { useFuzzySearch } from '@/composable/fuzzySearch';
 
-const { t } = useI18n();
-
 const props = withDefaults(
   defineProps<{
     options?: CSelectOption<T>[] | string[]
@@ -26,6 +24,8 @@ const props = withDefaults(
 );
 
 const emits = defineEmits(['update:value']);
+
+const { t } = useI18n();
 
 const { options: rawOptions, placeholder, size: sizeName, searchable } = toRefs(props);
 
@@ -153,7 +153,7 @@ function onSearchInput() {
       >
         <div flex-1 truncate>
           <slot name="displayed-value">
-            <input v-if="searchable && isOpen" ref="searchInputRef" v-model="searchQuery" type="text" :placeholder="t('common.searchPlaceholder')" class="search-input" w-full lh-normal color-current @input="onSearchInput">
+            <input v-if="searchable && isOpen" ref="searchInputRef" v-model="searchQuery" type="text" :placeholder="t('common.searchPlaceholder')" class="search-input" w-full color-current lh-normal @input="onSearchInput">
             <span v-else-if="selectedOption" lh-normal>
               {{ selectedOption.label }}
             </span>

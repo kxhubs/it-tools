@@ -17,27 +17,27 @@ const calculatedValues = computed<{
   getOldValue: (result: Ipv4RangeExpanderResult | undefined) => string | undefined
   getNewValue: (result: Ipv4RangeExpanderResult | undefined) => string | undefined
 }[]>(() => [
-  {
-    label: t('tools.ipv4-range-expander.startAddress'),
-    getOldValue: () => rawStartAddress.value,
-    getNewValue: result => result?.newStart,
-  },
-  {
-    label: t('tools.ipv4-range-expander.endAddress'),
-    getOldValue: () => rawEndAddress.value,
-    getNewValue: result => result?.newEnd,
-  },
-  {
-    label: t('tools.ipv4-range-expander.addressesInRange'),
-    getOldValue: result => result?.oldSize?.toLocaleString(),
-    getNewValue: result => result?.newSize?.toLocaleString(),
-  },
-  {
-    label: t('tools.ipv4-range-expander.cidr'),
-    getOldValue: () => '',
-    getNewValue: result => result?.newCidr,
-  },
-]);
+      {
+        label: t('tools.ipv4-range-expander.startAddress'),
+        getOldValue: () => rawStartAddress.value,
+        getNewValue: result => result?.newStart,
+      },
+      {
+        label: t('tools.ipv4-range-expander.endAddress'),
+        getOldValue: () => rawEndAddress.value,
+        getNewValue: result => result?.newEnd,
+      },
+      {
+        label: t('tools.ipv4-range-expander.addressesInRange'),
+        getOldValue: result => result?.oldSize?.toLocaleString(),
+        getNewValue: result => result?.newSize?.toLocaleString(),
+      },
+      {
+        label: t('tools.ipv4-range-expander.cidr'),
+        getOldValue: () => '',
+        getNewValue: result => result?.newCidr,
+      },
+    ]);
 
 const startIpValidation = useValidation({
   source: rawStartAddress,

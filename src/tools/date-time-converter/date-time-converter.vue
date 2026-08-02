@@ -117,7 +117,7 @@ const formats: DateFormat[] = [
 const formatLabels: Record<string, string> = {
   'JS locale date string': t('tools.date-converter.formatJsLocaleDateString'),
   'Unix timestamp': t('tools.date-converter.formatUnixTimestamp'),
-  Timestamp: t('tools.date-converter.formatTimestamp'),
+  'Timestamp': t('tools.date-converter.formatTimestamp'),
   'UTC format': t('tools.date-converter.formatUtc'),
   'Excel date/time': t('tools.date-converter.formatExcelDateTime'),
 };
