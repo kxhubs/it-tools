@@ -2,6 +2,117 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## Version 2026.09.05-ee7577f
+
+### Features
+- **fuzzy-search**: 支持响应式数据以适配语言切换 (9323254)
+- **http-status-codes**: 补充完整的状态码列表(共84个) (918f35b)
+- **i18n**: 翻译正则表达式与 Git 速查表内容 (e9a762d)
+- **i18n**: 汉化所有工具页面 (aea484f)
+- **i18n**: 增加浏览器语言自动检测功能 (b334bf5)
+- **encryption**: add AES CBC/GCM mode selection and IV handling (903783c)
+-  add Dev Container configuration and Codespaces badge (1f969da)
+-  use nginx-unprivileged image for container security (dce6e0e)
+- **sponsor**: added sponsor banner (#1422) (08d977b)
+- **i18n**: added Norwegian language (#1337) (aa8cba9)
+-  add sample of useful denied chars (eb17211)
+
+### Bug fixes
+-  stabilize GitHub Actions package setup (ee7577f)
+-  improve tool reliability and loading performance (df84429)
+- **ci**: 修复 lint 与类型检查问题 (1a5da62)
+- **docker**: 修复 Dockerfile ENV 指令使用新式格式 (a0d68f2)
+-  modernize app TypeScript config (927b505)
+-  harden merged tool updates (b7a8740)
+- **Cron Parser**: handle AWS syntax, timezones and next execution times (1f64fb6)
+- **Token Generator**: multi token, last settings, length input, denied chars (f718f57)
+- **text-to-unicode**: handle non-BMP characters and add more conversion formats (a7a15b2)
+- **date-time-converter**: support microseconds, UTC ISO display and JS Date formats (4c66350)
+- **integer-base-converter**: handle prefix/suffix, case insensitivity and big numbers (9da2c9e)
+- **bcrypt tool**: fix bcrypt error states and crashes (423cdab)
+- **text-to-binary**: return valid UTF-8 results for non-ASCII text (94a95d5)
+-  upgrade nginx base image to fix CVE-2026-42945 (CVSS 9.2 RCE) (316d1f8)
+-  upgrade nginx base image to fix CVE-2026-42945 (CVSS 9.2 RCE) (2586baa)
+- **readme**: fixes the GitHub Codespaces badge size (af73ebc)
+- **c-input-text**: set minimum height for input field (#1552) (a4ab7db)
+- **locales**: update license from MIT to GPL-3.0 in language files (#1419) (63fbd3b)
+- **icons,branding**: swap twitter to X (#1369) (ea8c4ed)
+- **FavoriteButton**: pass tool path to favorite button (#1368) (ae13639)
+- **readme**: refresh stale contributors graph (#1364) (c7b80fb)
+- **yaml-to-json**: allow merge key to be parsed (#1359) (f836666)
+-  ensure length and count are > 0 (bbc0680)
+-  let user choice 'standard' vs 'aws' (7d40497)
+-  helpers dup % (605229f)
+- **Cron Parser**: handle aws, next executions and TZ (48b4904)
+-  milliseconds test and e2e (3ef7e50)
+- **date-time-converter**: add UTC ISO Display and JS Date Constructor (6fd79d6)
+-  error in denied chars logic (0e07e31)
+-  denied chars expected values (3439940)
+-  update queryParams (1b37a5a)
+- **bcrypt tool**: Fix bcrypt error states and crashes (#1133) (5410035)
+- **Token Generator**: handle UI for small smartphone screen (116c410)
+- **Token Generator**: handle UI for small smartphone screen (96f6050)
+- **text-to-unicode**: handle non-BMP + more conversion options (81010e6)
+- **text-to-binary**: return valid UTF-8 results for non-ASCII text (a3f7f98)
+- **Token Generator**: multi token, last settings, length input, denied chars (ff57fda)
+- **Cron Parser**: handle more patterns (f1044b3)
+- **integer-base-converter**: fix conversion for number of more than 32bits (34357dd)
+- **integer-basee-converter**: handle prefix/suffix and case in sensitive (e336ebe)
+- **date-time-converter**: handle timestamp in microseconds (88ecf60)
+
+### Refactoring
+- **ui**: improve AES-GCM decryption result handling (1793eb5)
+- **ui**: soporte de modos AES CBC/GCM y manejo de IV en encryption.vue (a4f2346)
+- **sponsors**: removed sponsor banners (#1553) (07eea0f)
+- **sponsor**: removed sponsor banner and related configurations (#1405) (b47d132)
+
+### Continuous integration
+-  pin E2E runner for Playwright (8a2f39f)
+-  migrate workflows to Node 24 (47dacb3)
+-  为 workflow 添加显式 GITHUB_TOKEN 权限声明 (18b980c)
+-  移除 Docker Hub 依赖,镜像仅推送 GHCR (c10d6a0)
+
+### Chores
+- **ci**: 将 Docker 镜像构建目标改为 kxhubs/it-tools (d11f8cd)
+-  更新 gitignore 与 tsconfig 注释 (cbe0fbc)
+- **i18n**: 添加翻译维护脚本 (a81f04e)
+- **deps**: 更新工具相关依赖并修复 vueuse 兼容性 (5a0da0d)
+-  add dependencies for merged tools and regenerate components (43e41dc)
+- **readme**: remove sponsors section (#1733) (d505845)
+- **sponsors**: added warp banner (#1664) (0de73e8)
+
+### Other
+-  Merge branch 'main' into devcontainer-config (aca386c)
+-  use nginx-unpriviledged (f02a028)
+-  Adds 'Open in GitHub Codespaces' badge (4317361)
+-  Adds Dev Container configuration (#1393) (8827917)
+-  feat(favorites) drag-and-drop favorites section (#1360) (0b1b98f)
+-  feat(html-wysiwyg-editor) h3 fix (#1363) (1314973)
+-  Merge branch 'main' into fix/token-generator (13d1fb0)
+-  Merge branch 'main' into fix/crontab-enh (692d6f4)
+-  Merge remote-tracking branch 'origin/main' into fix/crontab-enh (c7154c3)
+-  Merge branch 'main' into fix/token-generator (05454ee)
+-  Merge branch 'main' into pile-of-poo (82fa4e8)
+-  Merge branch 'main' into text-to-utf8-bin (c44c581)
+-  Merge branch 'main' into bcrypt-error-states (57184d8)
+-  Merge remote-tracking branch 'origin/main' into fix/token-generator (4ed2691)
+-  Split logic into models file and add tests (db38d3b)
+-  Merge branch 'main' into bcrypt-error-states (d5c037e)
+-  Fix type checking issues (69a0a6e)
+-  Convert Converter to class (395f16e)
+-  Always escape ASCII chars with special meaning (fb07d38)
+-  Merge branch 'main' into fix/token-generator (75cdc15)
+
+### Merge branch 'corentinth
+-  main' into devcontainer-config (564bcf3)
+
+### Merge branch 'fix/token-generator' of https
+-  //github.com/sharevb/it-tools into fix/token-generator (93777b9)
+
+### Merge branch 'fix/crontab-enh' of https
+-  //github.com/sharevb/it-tools into fix/crontab-enh (f44c7ad)
+-  //github.com/sharevb/it-tools into fix/crontab-enh (0b4a261)
+
 ## Version 2024.10.22-7ca5933
 
 ### Features
