@@ -42,4 +42,10 @@ html {
 * {
   box-sizing: border-box;
 }
+
+/* Keep number inputs from resizing with their mirrored text content. */
+.n-input-number {
+  width: 100%;
+  min-width: 0;
+}
 </style>

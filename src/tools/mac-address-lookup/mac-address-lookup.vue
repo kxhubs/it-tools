@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import db from 'oui-data';
 import { macAddressValidationRules } from '@/utils/macAddress';
 import { useCopy } from '@/composable/copy';
 
@@ -7,7 +6,13 @@ const { t } = useI18n();
 const getVendorValue = (address: string) => address.trim().replace(/[.:-]/g, '').toUpperCase().substring(0, 6);
 
 const macAddress = ref('20:37:06:12:34:56');
-const details = computed<string | undefined>(() => (db as Record<string, string>)[getVendorValue(macAddress.value)]);
+const vendors = shallowRef<Record<string, string>>({});
+const details = computed<string | undefined>(() => vendors.value[getVendorValue(macAddress.value)]);
+
+onMounted(async () => {
+  const { default: db } = await import('oui-data');
+  vendors.value = db as Record<string, string>;
+});
 
 const { copy } = useCopy({ source: () => details.value ?? '', text: t('tools.mac-address-lookup.copied') });
 </script>

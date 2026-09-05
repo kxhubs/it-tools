@@ -14,7 +14,7 @@ const {
   isSupported,
   ensurePermissions,
 } = useDevicesList({
-  requestPermissions: true,
+  requestPermissions: false,
   constraints: { video: true, audio: true },
   onUpdated() {
     refreshCurrentDevices();
