@@ -81,5 +81,7 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
+          cache-from: type=gha,scope=nightly-image
+          cache-to: type=gha,mode=max,scope=nightly-image
           tags: |
             ghcr.io/kxhubs/it-tools:nightly

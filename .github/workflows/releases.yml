@@ -39,9 +39,11 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
+          cache-from: type=gha,scope=release-image
+          cache-to: type=gha,mode=max,scope=release-image
           tags: |
             ghcr.io/kxhubs/it-tools:latest
-            ghcr.io/kxhubs/it-tools:${{ env.RELEASE_VERSION}}
+            ghcr.io/kxhubs/it-tools:${{ env.RELEASE_VERSION }}
 
   github-release:
     runs-on: ubuntu-latest
