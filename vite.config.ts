@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import { URL, fileURLToPath } from 'node:url';
 
@@ -17,6 +18,24 @@ import svgLoader from 'vite-svg-loader';
 import { configDefaults } from 'vitest/config';
 
 const baseUrl = process.env.BASE_URL ?? '/';
+
+function getVersionTag() {
+  if (process.env.GITHUB_REF_TYPE === 'tag' && process.env.GITHUB_REF_NAME) {
+    return process.env.GITHUB_REF_NAME;
+  }
+
+  try {
+    return execFileSync('git', ['describe', '--tags', '--abbrev=0'], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
+  }
+  catch {
+    return `v${process.env.npm_package_version ?? '0.0.0'}`;
+  }
+}
+
+const versionTag = getVersionTag();
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -105,7 +124,7 @@ export default defineConfig({
     },
   },
   define: {
-    'import.meta.env.PACKAGE_VERSION': JSON.stringify(process.env.npm_package_version),
+    'import.meta.env.PACKAGE_VERSION': JSON.stringify(versionTag),
   },
   test: {
     exclude: [...configDefaults.exclude, '**/*.e2e.spec.ts'],

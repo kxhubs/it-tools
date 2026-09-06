@@ -63,8 +63,8 @@ const tools = computed<ToolCategory[]>(() => [
           <div>
             IT-Tools
 
-            <c-link target="_blank" rel="noopener" :href="`https://github.com/CorentinTh/it-tools/tree/v${version}`">
-              v{{ version }}
+            <c-link target="_blank" rel="noopener" :href="`https://github.com/kxhubs/it-tools/tree/${version}`">
+              {{ version }}
             </c-link>
 
             <template v-if="commitSha && commitSha.length > 0">
