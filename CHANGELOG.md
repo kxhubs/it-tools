@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## Version 2026.09.06-0de2cec
+
+### Bug fixes
+-  pin pnpm setup action commit (0de2cec)
+-  sync displayed version with release tags (28b76b9)
+
 ## Version 2026.09.05-ee7577f
 
 ### Features
